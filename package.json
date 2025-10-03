@@ -1,13 +1,14 @@
 {
-  "name": "presentation-builder",
+  "name": "electron-vite-template",
   "version": "1.0.0",
   "main": "main.js",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "electron": "electron .",
-    "electron:dev": "concurrently \"npm run dev\" \"wait-on http://localhost:5173 && electron .\"",
-    "dist": "npm run build && electron-builder"
+    "electron:dev": "concurrently \"npm run dev\" \"wait-on http://localhost:5173 && cross-env NODE_ENV=development electron .\"",
+    "dist": "npm run build && electron-builder",
+    "postinstall": "electron-rebuild"
   },
   "keywords": [],
   "author": "",
@@ -19,8 +20,10 @@
     "@vitejs/plugin-react": "^5.0.3",
     "autoprefixer": "^10.4.21",
     "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
     "electron": "^38.1.2",
     "electron-builder": "^26.0.12",
+    "electron-rebuild": "^3.2.9",
     "postcss": "^8.5.6",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",

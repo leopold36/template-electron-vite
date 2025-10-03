@@ -9,7 +9,7 @@ class DatabaseManager {
 
   init() {
     try {
-      const dbPath = path.join(app.getPath('userData'), 'presentation-builder.db');
+      const dbPath = path.join(app.getPath('userData'), 'app.db');
       this.db = new Database(dbPath);
 
       this.db.exec(`
@@ -63,9 +63,56 @@ class DatabaseManager {
     }
   }
 
+  deleteProject(id) {
+    try {
+      const stmt = this.db.prepare('DELETE FROM projects WHERE id = ?');
+      const result = stmt.run(id);
+      return result.changes > 0;
+    } catch (error) {
+      console.error('Failed to delete project:', error);
+      throw error;
+    }
+  }
+
   close() {
     if (this.db) {
       this.db.close();
+    }
+  }
+
+  // Database viewer methods
+  getTables() {
+    try {
+      const stmt = this.db.prepare(`
+        SELECT name FROM sqlite_master
+        WHERE type='table'
+        AND name NOT LIKE 'sqlite_%'
+        ORDER BY name
+      `);
+      return stmt.all();
+    } catch (error) {
+      console.error('Failed to get tables:', error);
+      throw error;
+    }
+  }
+
+  getTableSchema(tableName) {
+    try {
+      const stmt = this.db.prepare(`PRAGMA table_info(${tableName})`);
+      return stmt.all();
+    } catch (error) {
+      console.error('Failed to get table schema:', error);
+      throw error;
+    }
+  }
+
+  getTableData(tableName) {
+    try {
+      const stmt = this.db.prepare(`SELECT * FROM ${tableName}`);
+      return stmt.all();
+    } catch (error) {
+      console.error('Failed to get table data:', error);
+      throw error;
     }
   }
 }

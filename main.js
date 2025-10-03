@@ -67,6 +67,43 @@ class MainApp {
         throw error;
       }
     });
+
+    ipcMain.handle('projects:delete', async (_, id) => {
+      try {
+        return database.deleteProject(id);
+      } catch (error) {
+        console.error('Failed to delete project:', error);
+        throw error;
+      }
+    });
+
+    // Database viewer IPC handlers
+    ipcMain.handle('db:getTables', async () => {
+      try {
+        return database.getTables();
+      } catch (error) {
+        console.error('Failed to get tables:', error);
+        throw error;
+      }
+    });
+
+    ipcMain.handle('db:getTableSchema', async (_, tableName) => {
+      try {
+        return database.getTableSchema(tableName);
+      } catch (error) {
+        console.error('Failed to get table schema:', error);
+        throw error;
+      }
+    });
+
+    ipcMain.handle('db:getTableData', async (_, tableName) => {
+      try {
+        return database.getTableData(tableName);
+      } catch (error) {
+        console.error('Failed to get table data:', error);
+        throw error;
+      }
+    });
   }
 
   async initialize() {
